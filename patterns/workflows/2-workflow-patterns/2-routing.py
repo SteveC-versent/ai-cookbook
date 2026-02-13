@@ -1,8 +1,10 @@
-from typing import Optional, Literal
-from pydantic import BaseModel, Field
-from openai import OpenAI
-import os
 import logging
+import os
+from typing import Literal, Optional
+
+from dotenv import load_dotenv
+from openai import OpenAI
+from pydantic import BaseModel, Field
 
 # Set up logging configuration
 logging.basicConfig(
@@ -12,8 +14,9 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+load_dotenv("../.env")
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-model = "gpt-4o"
+model = "gpt-5-mini"
 
 # --------------------------------------------------------------
 # Step 1: Define the data models for routing and responses
