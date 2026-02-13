@@ -107,4 +107,7 @@ qdrant_data/
 # Exclude video files
 *.mp4
 
+# Exclude specific files
+patterns/patterns.code-workspace
+
 .cursor/

@@ -2,7 +2,10 @@ import json
 import os
 
 from openai import OpenAI
+from dotenv import load_dotenv
 from pydantic import BaseModel, Field
+
+load_dotenv("../.env")
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
@@ -55,7 +58,7 @@ messages = [
 ]
 
 completion = client.chat.completions.create(
-    model="gpt-4o",
+    model="gpt-5-mini",
     messages=messages,
     tools=tools,
 )
