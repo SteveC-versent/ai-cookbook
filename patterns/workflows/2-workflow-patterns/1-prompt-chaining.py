@@ -1,20 +1,28 @@
-from typing import Optional
-from datetime import datetime
-from pydantic import BaseModel, Field
-from openai import OpenAI
-import os
 import logging
+import os
+from datetime import datetime
+from typing import Optional
+
+from dotenv import load_dotenv
+from openai import OpenAI
+from pydantic import BaseModel, Field
+
 
 # Set up logging configuration
 logging.basicConfig(
     level=logging.INFO,
+    # level=logging.DEBUG,
     format="%(asctime)s - %(levelname)s - %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
+    # filename="app.log",
+    # filemode="a",
 )
 logger = logging.getLogger(__name__)
 
+load_dotenv("../.env")
+
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-model = "gpt-4o"
+model = "gpt-5-mini"
 
 # --------------------------------------------------------------
 # Step 1: Define the data models for each stage
@@ -66,7 +74,7 @@ def extract_event_info(user_input: str) -> EventExtraction:
     today = datetime.now()
     date_context = f"Today is {today.strftime('%A, %B %d, %Y')}."
 
-    completion = client.beta.chat.completions.parse(
+    completion = client.chat.completions.parse(
         model=model,
         messages=[
             {
@@ -91,7 +99,7 @@ def parse_event_details(description: str) -> EventDetails:
     today = datetime.now()
     date_context = f"Today is {today.strftime('%A, %B %d, %Y')}."
 
-    completion = client.beta.chat.completions.parse(
+    completion = client.chat.completions.parse(
         model=model,
         messages=[
             {
@@ -114,7 +122,7 @@ def generate_confirmation(event_details: EventDetails) -> EventConfirmation:
     """Third LLM call to generate a confirmation message"""
     logger.info("Generating confirmation message")
 
-    completion = client.beta.chat.completions.parse(
+    completion = client.chat.completions.parse(
         model=model,
         messages=[
             {
