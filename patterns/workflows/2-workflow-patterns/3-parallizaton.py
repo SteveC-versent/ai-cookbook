@@ -4,6 +4,7 @@ import os
 
 import nest_asyncio
 from openai import AsyncOpenAI
+from dotenv import load_dotenv
 from pydantic import BaseModel, Field
 
 nest_asyncio.apply()
@@ -16,8 +17,9 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+load_dotenv("../.env")
 client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-model = "gpt-4o"
+model = "gpt-5-mini"
 
 # --------------------------------------------------------------
 # Step 1: Define validation models
@@ -45,7 +47,7 @@ class SecurityCheck(BaseModel):
 
 async def validate_calendar_request(user_input: str) -> CalendarValidation:
     """Check if the input is a valid calendar request"""
-    completion = await client.beta.chat.completions.parse(
+    completion = await client.chat.completions.parse(
         model=model,
         messages=[
             {
@@ -61,7 +63,7 @@ async def validate_calendar_request(user_input: str) -> CalendarValidation:
 
 async def check_security(user_input: str) -> SecurityCheck:
     """Check for potential security risks"""
-    completion = await client.beta.chat.completions.parse(
+    completion = await client.chat.completions.parse(
         model=model,
         messages=[
             {
